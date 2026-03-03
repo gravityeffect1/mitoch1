@@ -695,6 +695,7 @@
       <nav class="header-nav">
         <a class="nav-link active" data-module="home">Home</a>
         <a class="nav-link" data-module="interactive">Interactive</a>
+        <a class="nav-link" data-module="atp">ATP Synthase</a>
         <a class="nav-link" data-module="learn">Learn</a>
         <a class="nav-link" data-module="research">Research</a>
       </nav>
@@ -1025,6 +1026,959 @@
       </div>
     </section>
 
+
+  <!-- ATP SYNTHASE MODULE -->
+<section class="module-section" id="atp">
+  <div class="title-section">
+    <div class="title-badge">
+      <span>⚙️</span>
+      <span>Interactive Atlas</span>
+    </div>
+    <h1>ATP Synthase</h1>
+    <p>Schematic + structure views of the rotary motor mechanism.</p>
+  </div>
+
+  <div class="content-card" style="padding: 0; overflow: hidden;">
+    <iframe
+      id="atpIframe"
+      title="ATP Synthase Module"
+      style="width: 100%; height: 85vh; border: 0; display: block;"
+      loading="lazy"
+    ></iframe>
+  </div>
+
+  <!-- IMPORTANT: Paste your ENTIRE ATP Synthase HTML (unchanged) inside this template -->
+  <template id="atpTemplate">
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATP Synthase - Interactive Mechanism</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0A0E27;
+      --bg-card: #151932;
+      --bg-hover: #1E2343;
+      --text-primary: #FFFFFF;
+      --text-secondary: #A0AEC0;
+      --text-accent: #50E3C2;
+      --border: rgba(255, 255, 255, 0.1);
+      
+      /* ATP Synthase colors (from Alberts) */
+      --rotor-ring: #6BB3E0;
+      --central-stalk: #9B5C8F;
+      --f1-head: #7CB974;
+      --peripheral-stalk: #E89B5C;
+      --stator: #D98B8B;
+      --proton: #F8E71C;
+      --atp-red: #E74C3C;
+      --adp-green: #7CB974;
+      
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #FFFFFF, #A0AEC0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+    }
+    
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-accent);
+    }
+    
+    /* Schematic View (Left) */
+    .schematic-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-hover);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    
+    .schematic-svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* 3D Structure View (Right) */
+    .structure-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-hover);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    
+    .structure-svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    
+    .control-btn {
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+    
+    .control-btn.active {
+      background: var(--text-accent);
+      border-color: var(--text-accent);
+      color: var(--bg-dark);
+    }
+    
+    .control-btn.play {
+      background: var(--text-accent);
+      color: var(--bg-dark);
+    }
+    
+    .control-btn.play:hover {
+      background: #3CC9A8;
+      transform: scale(1.05);
+    }
+    
+    /* Info Panel */
+    .info-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .info-panel h3 {
+      font-size: 1.25rem;
+      color: var(--text-accent);
+      margin-bottom: 1rem;
+    }
+    
+    .info-panel p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-accent);
+      font-family: var(--font-mono);
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+    
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    
+    .legend-color {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .legend-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Animations */
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes protonFlow {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    @keyframes atpRelease {
+      0% { transform: translate(0, 0); opacity: 1; }
+      100% { transform: translate(30px, -30px); opacity: 0; }
+    }
+    
+    .rotating {
+      animation: rotate 4s linear infinite;
+    }
+    
+    .paused {
+      animation-play-state: paused !important;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Annotations */
+    .annotation {
+      font-size: 11px;
+      font-weight: 600;
+      fill: var(--text-primary);
+    }
+    
+    .annotation-line {
+      stroke: var(--text-secondary);
+      stroke-width: 1;
+      stroke-dasharray: 2, 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>ATP Synthase: The Molecular Motor</h1>
+      <p>Explore how this nanomachine converts the electrochemical gradient of protons into chemical-bond energy in ATP. Based on Alberts et al., Molecular Biology of the Cell.</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="control-btn play" id="playBtn" onclick="toggleAnimation()">
+        <span id="playIcon">▶</span>
+        <span id="playText">Start Animation</span>
+      </button>
+      <button class="control-btn" onclick="setSpeed(0.5)">0.5× Speed</button>
+      <button class="control-btn active" onclick="setSpeed(1)">1× Speed</button>
+      <button class="control-btn" onclick="setSpeed(2)">2× Speed</button>
+      <button class="control-btn" onclick="resetAnimation()">↻ Reset</button>
+    </div>
+
+    <!-- Main Grid: Schematic + 3D Structure -->
+    <div class="main-grid">
+      <!-- Left: Schematic Diagram (Alberts style) -->
+      <div class="card">
+        <h2>Schematic Mechanism</h2>
+        <div class="schematic-container">
+          <svg class="schematic-svg" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Gradients -->
+              <linearGradient id="rotorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#8BC5E5" />
+                <stop offset="100%" stop-color="#6BB3E0" />
+              </linearGradient>
+              
+              <linearGradient id="stalkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#B57BA5" />
+                <stop offset="100%" stop-color="#9B5C8F" />
+              </linearGradient>
+              
+              <linearGradient id="headGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#95CC88" />
+                <stop offset="100%" stop-color="#7CB974" />
+              </linearGradient>
+              
+              <linearGradient id="peripheralGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#F2B079" />
+                <stop offset="100%" stop-color="#E89B5C" />
+              </linearGradient>
+              
+              <!-- Membrane pattern -->
+              <pattern id="membranePattern" x="0" y="0" width="20" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="3" fill="rgba(255,255,255,0.1)"/>
+                <circle cx="15" cy="5" r="3" fill="rgba(255,255,255,0.1)"/>
+              </pattern>
+            </defs>
+            
+            <!-- Background regions -->
+            <!-- Intermembrane space (top) -->
+            <rect x="0" y="0" width="500" height="150" fill="rgba(100, 150, 200, 0.15)"/>
+            <text x="250" y="30" text-anchor="middle" fill="#A0AEC0" font-size="14" font-weight="600">INTERMEMBRANE SPACE</text>
+            
+            <!-- Membrane -->
+            <rect x="0" y="150" width="500" height="100" fill="rgba(180, 140, 100, 0.3)"/>
+            <rect x="0" y="150" width="500" height="100" fill="url(#membranePattern)"/>
+            
+            <!-- Matrix (bottom) -->
+            <rect x="0" y="250" width="500" height="350" fill="rgba(120, 180, 140, 0.15)"/>
+            <text x="250" y="580" text-anchor="middle" fill="#A0AEC0" font-size="14" font-weight="600">MATRIX</text>
+            
+            <!-- Protons in intermembrane space -->
+            <g class="protons-top">
+              <g class="proton" style="animation: protonFlow 4s ease-in-out infinite;">
+                <circle cx="100" cy="80" r="12" fill="#F8E71C" opacity="0.9"/>
+                <text x="100" y="87" text-anchor="middle" fill="#000" font-size="16" font-weight="700">H⁺</text>
+              </g>
+              <g class="proton" style="animation: protonFlow 4s ease-in-out infinite; animation-delay: 0.5s;">
+                <circle cx="180" cy="100" r="12" fill="#F8E71C" opacity="0.9"/>
+                <text x="180" y="107" text-anchor="middle" fill="#000" font-size="16" font-weight="700">H⁺</text>
+              </g>
+              <g class="proton" style="animation: protonFlow 4s ease-in-out infinite; animation-delay: 1s;">
+                <circle cx="320" cy="90" r="12" fill="#F8E71C" opacity="0.9"/>
+                <text x="320" y="97" text-anchor="middle" fill="#000" font-size="16" font-weight="700">H⁺</text>
+              </g>
+              <g class="proton" style="animation: protonFlow 4s ease-in-out infinite; animation-delay: 1.5s;">
+                <circle cx="400" cy="110" r="12" fill="#F8E71C" opacity="0.9"/>
+                <text x="400" y="117" text-anchor="middle" fill="#000" font-size="16" font-weight="700">H⁺</text>
+              </g>
+            </g>
+            
+            <!-- F0 portion (rotor ring in membrane) -->
+            <g id="f0-rotor" transform-origin="250 200">
+              <!-- Rotor ring (c-ring) -->
+              <ellipse cx="250" cy="200" rx="50" ry="30" fill="url(#rotorGrad)" stroke="#5A9FC0" stroke-width="2"/>
+              
+              <!-- Individual c subunits (8 subunits) -->
+              <g opacity="0.7">
+                <circle cx="250" cy="170" r="6" fill="#5A9FC0"/>
+                <circle cx="285" cy="180" r="6" fill="#5A9FC0"/>
+                <circle cx="300" cy="200" r="6" fill="#5A9FC0"/>
+                <circle cx="285" cy="220" r="6" fill="#5A9FC0"/>
+                <circle cx="250" cy="230" r="6" fill="#5A9FC0"/>
+                <circle cx="215" cy="220" r="6" fill="#5A9FC0"/>
+                <circle cx="200" cy="200" r="6" fill="#5A9FC0"/>
+                <circle cx="215" cy="180" r="6" fill="#5A9FC0"/>
+              </g>
+              
+              <!-- Proton binding site indicator -->
+              <circle cx="305" cy="200" r="8" fill="none" stroke="#F8E71C" stroke-width="2" opacity="0.8"/>
+              
+              <text x="250" y="207" text-anchor="middle" fill="#2A5A6F" font-size="12" font-weight="700">c-ring</text>
+            </g>
+            
+            <!-- Proton channel (half channel in stator) -->
+            <path d="M 340,150 L 350,170 L 350,230 L 340,250" 
+                  fill="none" 
+                  stroke="#E89B5C" 
+                  stroke-width="8" 
+                  opacity="0.6"
+                  stroke-linecap="round"/>
+            
+            <!-- H+ carrier annotation on rotor -->
+            <g>
+              <line x1="305" y1="200" x2="360" y2="200" stroke="#A0AEC0" stroke-width="1" stroke-dasharray="3,3"/>
+              <text x="370" y="200" fill="#A0AEC0" font-size="11" font-weight="600">H⁺ carrier</text>
+              <text x="370" y="215" fill="#A0AEC0" font-size="11" font-weight="600">(rotor ring)</text>
+            </g>
+            
+            <!-- Central stalk (γ subunit - rotates with rotor) -->
+            <g id="central-stalk" transform-origin="250 200">
+              <path d="M 240,230 L 235,300 L 265,300 L 260,230 Z" 
+                    fill="url(#stalkGrad)" 
+                    stroke="#8B4C7F" 
+                    stroke-width="2"/>
+              <text x="250" y="270" text-anchor="middle" fill="#FFF" font-size="10" font-weight="700">γ</text>
+            </g>
+            
+            <!-- Central stalk annotation -->
+            <g>
+              <line x1="265" y1="265" x2="320" y2="265" stroke="#A0AEC0" stroke-width="1" stroke-dasharray="3,3"/>
+              <text x="330" y="265" fill="#A0AEC0" font-size="11" font-weight="600">central stalk</text>
+            </g>
+            
+            <!-- F1 ATPase head (stationary) -->
+            <g id="f1-head">
+              <!-- Hexamer structure (α3β3) -->
+              <ellipse cx="250" cy="350" rx="80" ry="65" fill="url(#headGrad)" stroke="#6CA964" stroke-width="2"/>
+              
+              <!-- Alpha and beta subunits indicated -->
+              <g opacity="0.6">
+                <circle cx="250" cy="285" r="20" fill="#6CA964"/>
+                <circle cx="310" cy="310" r="20" fill="#6CA964"/>
+                <circle cx="310" cy="390" r="20" fill="#6CA964"/>
+                <circle cx="250" cy="415" r="20" fill="#6CA964"/>
+                <circle cx="190" cy="390" r="20" fill="#6CA964"/>
+                <circle cx="190" cy="310" r="20" fill="#6CA964"/>
+              </g>
+              
+              <text x="250" y="357" text-anchor="middle" fill="#FFF" font-size="14" font-weight="700">F₁ ATPase</text>
+              <text x="250" y="375" text-anchor="middle" fill="#FFF" font-size="11" font-weight="600">head</text>
+            </g>
+            
+            <!-- Peripheral stalk (stator) -->
+            <g id="peripheral-stalk">
+              <path d="M 340,250 L 350,270 L 350,330 L 340,350" 
+                    fill="url(#peripheralGrad)" 
+                    stroke="#D88A4C" 
+                    stroke-width="2"/>
+              <text x="345" y="305" text-anchor="middle" fill="#FFF" font-size="9" font-weight="700" transform="rotate(-90 345 305)">stator</text>
+            </g>
+            
+            <!-- Peripheral stalk annotation -->
+            <g>
+              <line x1="355" y1="310" x2="400" y2="310" stroke="#A0AEC0" stroke-width="1" stroke-dasharray="3,3"/>
+              <text x="410" y="310" fill="#A0AEC0" font-size="11" font-weight="600">peripheral</text>
+              <text x="410" y="325" fill="#A0AEC0" font-size="11" font-weight="600">stalk</text>
+            </g>
+            
+            <!-- Catalytic sites indicators -->
+            <g class="catalytic-sites">
+              <!-- Active site with ATP synthesis -->
+              <g transform="translate(250, 320)">
+                <circle cx="0" cy="0" r="18" fill="none" stroke="#50E3C2" stroke-width="2" opacity="0.8"/>
+                <!-- ADP + Pi input -->
+                <g class="adp-input">
+                  <circle cx="-25" cy="0" r="8" fill="#7CB974" opacity="0.7"/>
+                  <text x="-25" y="3" text-anchor="middle" fill="#FFF" font-size="8" font-weight="700">Pi</text>
+                </g>
+                <g class="adp-circle">
+                  <circle cx="-40" cy="0" r="10" fill="#7CB974" opacity="0.7"/>
+                  <text x="-40" y="4" text-anchor="middle" fill="#FFF" font-size="9" font-weight="700">ADP</text>
+                </g>
+                <!-- Arrow -->
+                <path d="M -15,0 L 15,0" stroke="#50E3C2" stroke-width="2" marker-end="url(#arrowhead)"/>
+                <!-- ATP output -->
+                <g class="atp-output" style="animation: atpRelease 4s ease-in-out infinite;">
+                  <circle cx="35" cy="0" r="10" fill="#E74C3C" opacity="0.9"/>
+                  <text x="35" y="4" text-anchor="middle" fill="#FFF" font-size="9" font-weight="700">ATP</text>
+                </g>
+              </g>
+            </g>
+            
+            <!-- Arrow marker definition -->
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#50E3C2"/>
+              </marker>
+            </defs>
+            
+            <!-- Rotation indicator -->
+            <g id="rotation-arrow" opacity="0.6">
+              <path d="M 330,350 A 80,80 0 0,1 250,270" 
+                    fill="none" 
+                    stroke="#50E3C2" 
+                    stroke-width="3" 
+                    stroke-dasharray="5,5"
+                    marker-end="url(#arrowhead)"/>
+              <text x="340" y="310" fill="#50E3C2" font-size="12" font-weight="600">rotation</text>
+            </g>
+            
+            <!-- Proton flow arrows -->
+            <g class="proton-flow-arrows" opacity="0.7">
+              <path d="M 300,120 L 310,160" 
+                    stroke="#F8E71C" 
+                    stroke-width="3" 
+                    marker-end="url(#protonArrow)"/>
+              <path d="M 310,240 L 300,280" 
+                    stroke="#F8E71C" 
+                    stroke-width="3" 
+                    marker-end="url(#protonArrow)"/>
+            </g>
+            
+            <defs>
+              <marker id="protonArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#F8E71C"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Right: 3D-like Structure -->
+      <div class="card">
+        <h2>Molecular Structure</h2>
+        <div class="structure-container">
+          <svg class="structure-svg" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- 3D-style gradients with shadows -->
+              <radialGradient id="rotor3D" cx="30%" cy="30%">
+                <stop offset="0%" stop-color="#A5D9F0" />
+                <stop offset="50%" stop-color="#6BB3E0" />
+                <stop offset="100%" stop-color="#4A8FC0" />
+              </radialGradient>
+              
+              <radialGradient id="head3D" cx="35%" cy="35%">
+                <stop offset="0%" stop-color="#A5D99D" />
+                <stop offset="50%" stop-color="#7CB974" />
+                <stop offset="100%" stop-color="#5A8F54" />
+              </radialGradient>
+              
+              <linearGradient id="stalk3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#C590B5" />
+                <stop offset="50%" stop-color="#9B5C8F" />
+                <stop offset="100%" stop-color="#7B4A6F" />
+              </linearGradient>
+              
+              <!-- Filters for depth -->
+              <filter id="shadow3D">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+                <feOffset dx="3" dy="3" result="offsetblur"/>
+                <feComponentTransfer>
+                  <feFuncA type="linear" slope="0.4"/>
+                </feComponentTransfer>
+                <feMerge>
+                  <feMergeNode/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            
+            <!-- Background regions -->
+            <rect x="0" y="0" width="500" height="150" fill="rgba(100, 150, 200, 0.15)"/>
+            <text x="250" y="30" text-anchor="middle" fill="#A0AEC0" font-size="14" font-weight="600">INTERMEMBRANE SPACE</text>
+            
+            <rect x="0" y="150" width="500" height="100" fill="rgba(180, 140, 100, 0.3)"/>
+            
+            <rect x="0" y="250" width="500" height="350" fill="rgba(120, 180, 140, 0.15)"/>
+            <text x="250" y="580" text-anchor="middle" fill="#A0AEC0" font-size="14" font-weight="600">MATRIX</text>
+            
+            <!-- Membrane detail (lipid bilayer indication) -->
+            <g opacity="0.3">
+              <ellipse cx="50" cy="175" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="100" cy="175" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="150" cy="175" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="200" cy="175" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="300" cy="175" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="350" cy="175" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="400" cy="175" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="450" cy="175" rx="15" ry="8" fill="#FFF"/>
+              
+              <ellipse cx="50" cy="225" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="100" cy="225" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="150" cy="225" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="200" cy="225" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="300" cy="225" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="350" cy="225" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="400" cy="225" rx="15" ry="8" fill="#FFF"/>
+              <ellipse cx="450" cy="225" rx="15" ry="8" fill="#FFF"/>
+            </g>
+            
+            <!-- Stator base (fixed to membrane) -->
+            <g id="stator-base-3d">
+              <ellipse cx="330" cy="200" rx="25" ry="15" fill="#D98B8B" opacity="0.6"/>
+              <ellipse cx="330" cy="200" rx="25" ry="15" fill="none" stroke="#C07B7B" stroke-width="2"/>
+              <text x="330" y="205" text-anchor="middle" fill="#FFF" font-size="10" font-weight="600">stator</text>
+            </g>
+            
+            <!-- F0 rotor (c-ring) - 3D style with rotation -->
+            <g id="f0-rotor-3d" transform-origin="250 200">
+              <!-- Shadow -->
+              <ellipse cx="253" cy="203" rx="48" ry="28" fill="#000" opacity="0.2" filter="blur(3px)"/>
+              
+              <!-- Main rotor disc -->
+              <ellipse cx="250" cy="200" rx="50" ry="30" fill="url(#rotor3D)" filter="url(#shadow3D)"/>
+              
+              <!-- Subunits arranged in ring (3D perspective) -->
+              <g opacity="0.8">
+                <ellipse cx="250" cy="170" rx="8" ry="5" fill="#4A8FC0"/>
+                <ellipse cx="285" cy="177" rx="8" ry="6" fill="#5A9FC0"/>
+                <ellipse cx="298" cy="195" rx="8" ry="7" fill="#6BB3E0"/>
+                <ellipse cx="290" cy="215" rx="8" ry="6" fill="#5A9FC0"/>
+                <ellipse cx="260" cy="225" rx="8" ry="5" fill="#4A8FC0"/>
+                <ellipse cx="220" cy="220" rx="8" ry="6" fill="#5A9FC0"/>
+                <ellipse cx="205" cy="202" rx="8" ry="7" fill="#6BB3E0"/>
+                <ellipse cx="215" cy="180" rx="8" ry="6" fill="#5A9FC0"/>
+              </g>
+              
+              <!-- Highlight -->
+              <ellipse cx="235" cy="185" rx="20" ry="12" fill="#FFF" opacity="0.3"/>
+              
+              <!-- Label -->
+              <text x="250" y="203" text-anchor="middle" fill="#2A5A7F" font-size="12" font-weight="700">F₀</text>
+            </g>
+            
+            <!-- Central stalk (γ subunit) - rotates -->
+            <g id="central-stalk-3d" transform-origin="250 200">
+              <!-- Shadow -->
+              <path d="M 243,230 L 238,330 L 262,330 L 257,230 Z" fill="#000" opacity="0.2"/>
+              
+              <!-- Stalk body -->
+              <path d="M 240,230 L 235,330 L 265,330 L 260,230 Z" fill="url(#stalk3D)" filter="url(#shadow3D)"/>
+              
+              <!-- Highlight -->
+              <path d="M 245,240 L 242,320 L 250,320 L 252,240 Z" fill="#FFF" opacity="0.2"/>
+              
+              <text x="250" y="285" text-anchor="middle" fill="#FFF" font-size="11" font-weight="700">γ</text>
+            </g>
+            
+            <!-- F1 head (α3β3 hexamer) - stationary -->
+            <g id="f1-head-3d">
+              <!-- Shadow -->
+              <ellipse cx="253" cy="373" rx="78" ry="63" fill="#000" opacity="0.2" filter="blur(4px)"/>
+              
+              <!-- Main head structure -->
+              <ellipse cx="250" cy="370" rx="80" ry="65" fill="url(#head3D)" filter="url(#shadow3D)"/>
+              
+              <!-- Individual subunits (α and β alternating) -->
+              <g opacity="0.5">
+                <!-- Top -->
+                <circle cx="250" cy="305" r="22" fill="#5A8F54" stroke="#4A7F44" stroke-width="1"/>
+                <text x="250" y="312" text-anchor="middle" fill="#FFF" font-size="11" font-weight="600">β</text>
+                
+                <!-- Upper right -->
+                <circle cx="310" cy="330" r="22" fill="#6CA964" stroke="#5C9954" stroke-width="1"/>
+                <text x="310" y="337" text-anchor="middle" fill="#FFF" font-size="11" font-weight="600">α</text>
+                
+                <!-- Lower right -->
+                <circle cx="310" cy="410" r="22" fill="#5A8F54" stroke="#4A7F44" stroke-width="1"/>
+                <text x="310" y="417" text-anchor="middle" fill="#FFF" font-size="11" font-weight="600">β</text>
+                
+                <!-- Bottom -->
+                <circle cx="250" cy="435" r="22" fill="#6CA964" stroke="#5C9954" stroke-width="1"/>
+                <text x="250" y="442" text-anchor="middle" fill="#FFF" font-size="11" font-weight="600">α</text>
+                
+                <!-- Lower left -->
+                <circle cx="190" cy="410" r="22" fill="#5A8F54" stroke="#4A7F44" stroke-width="1"/>
+                <text x="190" y="417" text-anchor="middle" fill="#FFF" font-size="11" font-weight="600">β</text>
+                
+                <!-- Upper left -->
+                <circle cx="190" cy="330" r="22" fill="#6CA964" stroke="#5C9954" stroke-width="1"/>
+                <text x="190" y="337" text-anchor="middle" fill="#FFF" font-size="11" font-weight="600">α</text>
+              </g>
+              
+              <!-- Central cavity -->
+              <circle cx="250" cy="370" r="35" fill="rgba(0,0,0,0.2)"/>
+              
+              <!-- Highlight on head -->
+              <ellipse cx="230" cy="350" rx="40" ry="30" fill="#FFF" opacity="0.25"/>
+              
+              <!-- Label -->
+              <text x="250" y="373" text-anchor="middle" fill="#2A5A3F" font-size="13" font-weight="700">F₁</text>
+            </g>
+            
+            <!-- Peripheral stalk connection -->
+            <g id="peripheral-stalk-3d">
+              <!-- Connection from F0 to F1 -->
+              <path d="M 330,240 Q 340,290 335,340" 
+                    fill="none" 
+                    stroke="#E89B5C" 
+                    stroke-width="12" 
+                    opacity="0.7"/>
+              <path d="M 330,240 Q 340,290 335,340" 
+                    fill="none" 
+                    stroke="#F2B079" 
+                    stroke-width="8"/>
+              
+              <!-- Shadow on stalk -->
+              <path d="M 333,245 Q 343,290 338,335" 
+                    fill="none" 
+                    stroke="#000" 
+                    stroke-width="4" 
+                    opacity="0.2"/>
+            </g>
+            
+            <!-- Proton flow visualization -->
+            <g class="proton-3d-flow">
+              <g class="proton-particle" style="animation: protonFlow 4s ease-in-out infinite;">
+                <circle cx="300" cy="100" r="14" fill="#F8E71C" opacity="0"/>
+                <circle cx="300" cy="140" r="14" fill="#F8E71C" opacity="0.3"/>
+                <circle cx="305" cy="180" r="14" fill="#F8E71C" opacity="0.7"/>
+                <circle cx="300" cy="220" r="14" fill="#F8E71C" opacity="0.3"/>
+                <circle cx="295" cy="260" r="14" fill="#F8E71C" opacity="0"/>
+              </g>
+            </g>
+            
+            <!-- ATP synthesis indicator -->
+            <g transform="translate(180, 370)">
+              <circle cx="0" cy="0" r="20" fill="none" stroke="#50E3C2" stroke-width="2" stroke-dasharray="3,3" opacity="0.8"/>
+              <text x="0" y="-30" text-anchor="middle" fill="#50E3C2" font-size="10" font-weight="600">ATP synthesis</text>
+              <text x="0" y="-18" text-anchor="middle" fill="#50E3C2" font-size="10" font-weight="600">site (β subunit)</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Information Panel -->
+    <div class="info-panel">
+      <h3>How ATP Synthase Works</h3>
+      <p><strong>The Molecular Motor:</strong> ATP synthase is a rotary nanomachine that converts the electrochemical gradient of protons into chemical-bond energy in ATP. The enzyme consists of two main components:</p>
+      
+      <p><strong>F₀ portion (membrane-embedded):</strong> Contains the c-ring (8-15 subunits depending on species) that rotates as protons flow through the interface between the c-ring and the stator (a subunit). Each proton binding causes a conformational change that drives rotation.</p>
+      
+      <p><strong>F₁ portion (catalytic head):</strong> Contains three catalytic β subunits and three regulatory α subunits arranged in an alternating hexamer. The γ subunit (central stalk) rotates inside this hexamer like a camshaft, inducing conformational changes in the β subunits.</p>
+      
+      <p><strong>The Binding Change Mechanism (Boyer):</strong> Each β subunit cycles through three states: (1) <em>Open</em> - binds ADP + Pi, (2) <em>Loose</em> - substrates positioned, (3) <em>Tight</em> - ATP synthesis occurs. Rotation of the γ subunit forces each β subunit through these states in sequence.</p>
+      
+      <p><strong>Stoichiometry:</strong> In humans, approximately 8 protons flow through F₀ per complete 360° rotation, producing 3 ATP molecules (one per β subunit catalytic cycle). This gives ~2.7 H⁺ per ATP, though the actual value varies with conditions.</p>
+      
+      <p style="font-style: italic; margin-top: 1.5rem; color: var(--text-accent);">Based on: Alberts B, et al. Molecular Biology of the Cell. 6th edition. Figure 14-16: ATP synthase acts like a motor to convert the energy of protons flowing down their electrochemical gradient to chemical-bond energy in ATP.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="info-panel">
+      <h3>Key Statistics</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">~100</div>
+          <div class="stat-label">Rotations/sec</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~300</div>
+          <div class="stat-label">ATP/sec</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~2.7</div>
+          <div class="stat-label">H⁺ per ATP</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~60%</div>
+          <div class="stat-label">Efficiency</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~650</div>
+          <div class="stat-label">kDa total mass</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-220</div>
+          <div class="stat-label">mV gradient</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="info-panel">
+      <h3>Component Legend</h3>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: #6BB3E0;"></div>
+          <span class="legend-label">F₀ c-ring (rotor) - rotates</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #9B5C8F;"></div>
+          <span class="legend-label">γ subunit (central stalk) - rotates</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #7CB974;"></div>
+          <span class="legend-label">F₁ head (α₃β₃) - stationary</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #E89B5C;"></div>
+          <span class="legend-label">Peripheral stalk - stationary</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #D98B8B;"></div>
+          <span class="legend-label">Stator (a subunit) - stationary</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #F8E71C;"></div>
+          <span class="legend-label">Proton (H⁺) flow</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #E74C3C;"></div>
+          <span class="legend-label">ATP (product)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #7CB974;"></div>
+          <span class="legend-label">ADP + Pi (substrates)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isAnimating = false;
+    let animationSpeed = 1;
+    
+    // Get rotating elements
+    const f0Rotor = document.getElementById('f0-rotor');
+    const centralStalk = document.getElementById('central-stalk');
+    const f0Rotor3d = document.getElementById('f0-rotor-3d');
+    const centralStalk3d = document.getElementById('central-stalk-3d');
+    const rotationArrow = document.getElementById('rotation-arrow');
+    
+    // All rotating elements
+    const rotatingElements = [f0Rotor, centralStalk, f0Rotor3d, centralStalk3d];
+    
+    function toggleAnimation() {
+      isAnimating = !isAnimating;
+      const playBtn = document.getElementById('playBtn');
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+      
+      if (isAnimating) {
+        rotatingElements.forEach(el => {
+          el.classList.add('rotating');
+          el.classList.remove('paused');
+        });
+        playIcon.textContent = '⏸';
+        playText.textContent = 'Pause Animation';
+        playBtn.classList.remove('play');
+        
+        // Show rotation arrow
+        if (rotationArrow) {
+          rotationArrow.style.opacity = '0.6';
+        }
+      } else {
+        rotatingElements.forEach(el => {
+          el.classList.add('paused');
+        });
+        playIcon.textContent = '▶';
+        playText.textContent = 'Resume Animation';
+      }
+    }
+    
+    function setSpeed(speed) {
+      animationSpeed = speed;
+      const duration = 4 / speed;
+      
+      rotatingElements.forEach(el => {
+        el.style.animationDuration = `${duration}s`;
+      });
+      
+      // Update all proton animations
+      const protons = document.querySelectorAll('.proton, .proton-particle');
+      protons.forEach(proton => {
+        proton.style.animationDuration = `${duration}s`;
+      });
+      
+      // Update ATP release animation
+      const atpOutputs = document.querySelectorAll('.atp-output');
+      atpOutputs.forEach(atp => {
+        atp.style.animationDuration = `${duration}s`;
+      });
+      
+      // Update active button
+      document.querySelectorAll('.control-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+    
+    function resetAnimation() {
+      isAnimating = false;
+      rotatingElements.forEach(el => {
+        el.classList.remove('rotating', 'paused');
+        // Force reflow to restart animation
+        void el.offsetWidth;
+      });
+      
+      const playIcon = document.getElementById('playIcon');
+      const playText = document.getElementById('playText');
+      const playBtn = document.getElementById('playBtn');
+      
+      playIcon.textContent = '▶';
+      playText.textContent = 'Start Animation';
+      playBtn.classList.add('play');
+      
+      // Hide rotation arrow
+      if (rotationArrow) {
+        rotationArrow.style.opacity = '0';
+      }
+    }
+    
+    // Initialize with animations paused
+    rotatingElements.forEach(el => {
+      el.style.animationDuration = '4s';
+    });
+  </script>
+</body>
+</html>
+  </template>
+</section>
     <!-- LEARN MODULE -->
     <section class="module-section" id="learn">
       <div class="title-section">
@@ -1078,7 +2032,403 @@
         <div class="equation">
           Δp = ΔΨ - (2.303RT/F)ΔpH ≈ -220 mV
         </div>
+<div class="content-card" style="padding: 0;">
+    <!-- Fancy 2D OXPHOS Schematic (fits your app style) -->
+<style>
+  /* Uses your existing CSS variables from :root */
+  .oxphos-wrap{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.25rem;
+    overflow: hidden;
+  }
+  .oxphos-title{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:1rem;
+    margin-bottom:1.25rem;
+  }
+  .oxphos-title h2{
+    margin:0;
+    font-size:1.5rem;
+    letter-spacing:-0.02em;
+  }
+  .oxphos-sub{
+    color: var(--text-secondary);
+    font-size:0.9rem;
+    margin:0;
+    max-width: 60ch;
+  }
+  .oxphos-svg{
+    width:100%;
+    height:auto;
+    display:block;
+  }
 
+  /* SVG text styling */
+  .t-primary { fill: var(--text-primary); font-family: var(--font-main); font-weight: 600; }
+  .t-secondary { fill: var(--text-secondary); font-family: var(--font-main); font-weight: 500; }
+  .t-mono { font-family: var(--font-mono); font-weight: 600; letter-spacing: 0.02em; }
+  .t-small { font-size: 12px; }
+  .t-med { font-size: 14px; }
+  .t-big { font-size: 16px; }
+
+  /* Labels / tags */
+  .tag {
+    fill: rgba(255,255,255,0.06);
+    stroke: rgba(255,255,255,0.12);
+    stroke-width: 1;
+  }
+  .tag-accent {
+    fill: rgba(80,227,194,0.10);
+    stroke: rgba(80,227,194,0.25);
+  }
+
+  /* Arrows */
+  .arrow-line {
+    stroke: rgba(255,255,255,0.35);
+    stroke-width: 2;
+    fill: none;
+  }
+  .arrow-accent {
+    stroke: rgba(80,227,194,0.75);
+  }
+  .arrow-warm {
+    stroke: rgba(248,231,28,0.70);
+  }
+
+  /* ETC / components */
+  .membrane-outer { fill: rgba(232,93,117,0.10); stroke: rgba(232,93,117,0.70); stroke-width: 2.5; }
+  .membrane-inner { fill: rgba(74,144,226,0.10); stroke: rgba(74,144,226,0.80); stroke-width: 2.5; }
+  .matrix-fill { fill: rgba(122,194,154,0.10); }
+  .ims-fill { fill: rgba(74,144,226,0.06); }
+
+  .complex-i  { fill: rgba(245,166,35,0.95); stroke: rgba(245,166,35,0.95); }
+  .complex-iii{ fill: rgba(233,75,119,0.95); stroke: rgba(233,75,119,0.95); }
+  .complex-iv { fill: rgba(139,87,42,0.95); stroke: rgba(139,87,42,0.95); }
+  .atpsyn     { fill: rgba(80,227,194,0.95); stroke: rgba(80,227,194,0.95); }
+
+  .pill {
+    filter: url(#softGlow);
+  }
+
+  .hplus {
+    fill: rgba(248,231,28,0.95);
+    stroke: rgba(248,231,28,0.55);
+    stroke-width: 1.5;
+    filter: url(#softGlowWarm);
+  }
+
+  .electron {
+    fill: rgba(248,231,28,0.95);
+    filter: url(#softGlowWarm);
+  }
+
+  /* Optional subtle hover if you want it interactive later */
+  .hit:hover { filter: brightness(1.15); }
+</style>
+
+<div class="oxphos-wrap">
+  <div class="oxphos-title">
+    <div>
+      <h2>Oxidative Phosphorylation Overview</h2>
+      <p class="oxphos-sub">
+        Same logic as your textbook scheme, but rendered in your app’s neon-dark visual language.
+      </p>
+    </div>
+    <div class="t-mono t-small" style="color: var(--text-accent);">Δp → ATP</div>
+  </div>
+
+  <svg class="oxphos-svg" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mitochondria oxidative phosphorylation schematic">
+    <defs>
+      <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="6" result="b"/>
+        <feMerge>
+          <feMergeNode in="b"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="softGlowWarm" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="7" result="b"/>
+        <feMerge>
+          <feMergeNode in="b"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <linearGradient id="outerGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="rgba(232,93,117,0.18)"/>
+        <stop offset="1" stop-color="rgba(232,93,117,0.06)"/>
+      </linearGradient>
+
+      <linearGradient id="innerGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="rgba(74,144,226,0.18)"/>
+        <stop offset="1" stop-color="rgba(74,144,226,0.06)"/>
+      </linearGradient>
+
+      <linearGradient id="matrixGrad2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="rgba(122,194,154,0.16)"/>
+        <stop offset="1" stop-color="rgba(122,194,154,0.06)"/>
+      </linearGradient>
+
+      <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="rgba(255,255,255,0.45)"/>
+      </marker>
+      <marker id="arrowHeadAccent" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="rgba(80,227,194,0.85)"/>
+      </marker>
+      <marker id="arrowHeadWarm" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="rgba(248,231,28,0.85)"/>
+      </marker>
+    </defs>
+
+    <!-- Right side caption panel (optional, matches your cards) -->
+    <g transform="translate(860, 60)">
+      <rect x="0" y="0" width="300" height="600" rx="20" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+      <text x="22" y="46" class="t-primary t-big">Activated carriers → ATP</text>
+      <text x="22" y="78" class="t-secondary t-med">
+        <tspan x="22" dy="0">• TCA produces NADH</tspan>
+        <tspan x="22" dy="22">• ETC transfers e⁻ to O₂</tspan>
+        <tspan x="22" dy="22">• H⁺ gradient powers ATP synthase</tspan>
+        <tspan x="22" dy="22">• ADP + Pi → ATP (exported)</tspan>
+      </text>
+
+      <rect x="22" y="200" width="256" height="120" rx="14" fill="rgba(80,227,194,0.06)" stroke="rgba(80,227,194,0.18)"/>
+      <text x="40" y="232" class="t-mono t-small" style="fill: rgba(80,227,194,0.9);">CHEMIOSMOSIS</text>
+      <text x="40" y="260" class="t-secondary t-med">
+        <tspan x="40" dy="0">Δp = ΔΨ + ΔpH</tspan>
+        <tspan x="40" dy="22">IMM: high protein density</tspan>
+        <tspan x="40" dy="22">IMS: H⁺ accumulation</tspan>
+      </text>
+
+      <rect x="22" y="350" width="256" height="190" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+      <text x="40" y="382" class="t-mono t-small" style="fill: rgba(248,231,28,0.9);">STOICHIOMETRY</text>
+      <text x="40" y="412" class="t-secondary t-med">
+        <tspan x="40" dy="0">• e⁻ from NADH → O₂ → H₂O</tspan>
+        <tspan x="40" dy="22">• Complex I/III/IV pump H⁺</tspan>
+        <tspan x="40" dy="22">• ATP synthase uses return flow</tspan>
+      </text>
+    </g>
+
+    <!-- Mitochondrion body -->
+    <g transform="translate(70, 70)">
+      <!-- Outer membrane shape -->
+      <path class="membrane-outer" fill="url(#outerGrad)"
+            d="M 70 230
+               C 70 80, 240 10, 430 20
+               C 585 28, 720 85, 745 210
+               C 765 310, 735 430, 635 495
+               C 540 560, 350 600, 210 560
+               C 120 535, 70 470, 70 400
+               Z" />
+
+      <!-- Inner membrane boundary -->
+      <path class="membrane-inner" fill="url(#innerGrad)"
+            d="M 130 245
+               C 140 125, 270 70, 420 78
+               C 555 85, 645 150, 668 230
+               C 690 310, 655 400, 585 450
+               C 510 505, 365 535, 245 505
+               C 165 485, 120 430, 130 360
+               Z" />
+
+      <!-- IMS (thin band) hint -->
+      <path class="ims-fill"
+            d="M 100 245
+               C 110 115, 270 35, 440 45
+               C 600 54, 730 140, 760 250
+               C 790 360, 745 480, 635 555
+               C 530 625, 320 650, 180 600
+               C 70 560, 35 420, 70 310
+               C 82 275, 90 260, 100 245 Z" opacity="0.35"/>
+
+      <!-- Matrix -->
+      <path fill="url(#matrixGrad2)"
+            d="M 165 260
+               C 175 160, 290 115, 415 120
+               C 535 125, 615 185, 635 245
+               C 655 315, 625 385, 565 425
+               C 500 468, 380 495, 280 475
+               C 210 460, 160 415, 165 350
+               Z" />
+
+      <!-- Cristae-ish inner membrane folds -->
+      <g opacity="0.85">
+        <path d="M 210 235 C 240 210, 270 210, 300 235
+                 C 330 260, 360 260, 390 235
+                 C 420 210, 450 210, 480 235
+                 C 510 260, 540 260, 570 235" 
+              fill="none" stroke="rgba(74,144,226,0.65)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M 210 235 C 240 210, 270 210, 300 235
+                 C 330 260, 360 260, 390 235
+                 C 420 210, 450 210, 480 235
+                 C 510 260, 540 260, 570 235" 
+              fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- ETC complexes sitting on IMM -->
+      <g class="pill hit" transform="translate(250, 205)">
+        <rect class="complex-i" x="-34" y="-52" width="68" height="104" rx="12"/>
+        <text x="0" y="8" text-anchor="middle" class="t-primary t-mono">I</text>
+      </g>
+
+      <g class="pill hit" transform="translate(400, 205)">
+        <rect class="complex-iii" x="-34" y="-48" width="68" height="96" rx="12"/>
+        <text x="0" y="8" text-anchor="middle" class="t-primary t-mono">III</text>
+      </g>
+
+      <g class="pill hit" transform="translate(550, 205)">
+        <rect class="complex-iv" x="-34" y="-48" width="68" height="96" rx="12"/>
+        <text x="0" y="8" text-anchor="middle" class="t-primary t-mono">IV</text>
+      </g>
+
+      <!-- ATP synthase -->
+      <g class="pill hit" transform="translate(640, 305)">
+        <rect class="atpsyn" x="-30" y="-60" width="60" height="120" rx="14"/>
+        <circle cx="0" cy="-75" r="28" fill="rgba(80,227,194,0.95)"/>
+        <circle cx="0" cy="-75" r="28" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+        <text x="0" y="10" text-anchor="middle" class="t-primary t-mono">V</text>
+        <text x="0" y="78" text-anchor="middle" class="t-secondary t-small">ATP synthase</text>
+      </g>
+
+      <!-- Proton pumping (H+) into IMS above IMM -->
+      <g>
+        <!-- from Complex I -->
+        <g transform="translate(250, 130)">
+          <circle class="hplus" cx="-26" cy="0" r="14"/><text x="-26" y="5" text-anchor="middle" class="t-primary t-mono t-small" style="fill:#000;">H⁺</text>
+          <circle class="hplus" cx="0" cy="-18" r="14"/><text x="0" y="-13" text-anchor="middle" class="t-primary t-mono t-small" style="fill:#000;">H⁺</text>
+          <circle class="hplus" cx="26" cy="0" r="14"/><text x="26" y="5" text-anchor="middle" class="t-primary t-mono t-small" style="fill:#000;">H⁺</text>
+          <path class="arrow-line arrow-warm" d="M 0 58 L 0 10" marker-end="url(#arrowHeadWarm)"/>
+        </g>
+
+        <!-- from Complex III -->
+        <g transform="translate(400, 130)">
+          <circle class="hplus" cx="-18" cy="0" r="14"/><text x="-18" y="5" text-anchor="middle" class="t-primary t-mono t-small" style="fill:#000;">H⁺</text>
+          <circle class="hplus" cx="18" cy="0" r="14"/><text x="18" y="5" text-anchor="middle" class="t-primary t-mono t-small" style="fill:#000;">H⁺</text>
+          <path class="arrow-line arrow-warm" d="M 0 58 L 0 10" marker-end="url(#arrowHeadWarm)"/>
+        </g>
+
+        <!-- from Complex IV -->
+        <g transform="translate(550, 130)">
+          <circle class="hplus" cx="0" cy="0" r="14"/><text x="0" y="5" text-anchor="middle" class="t-primary t-mono t-small" style="fill:#000;">H⁺</text>
+          <path class="arrow-line arrow-warm" d="M 0 58 L 0 10" marker-end="url(#arrowHeadWarm)"/>
+        </g>
+      </g>
+
+      <!-- Electron flow line -->
+      <path class="arrow-line arrow-warm" d="M 250 205 C 315 165, 345 165, 400 205
+                                             C 455 245, 495 245, 550 205"
+            marker-end="url(#arrowHeadWarm)"/>
+      <circle class="electron" cx="310" cy="175" r="6"/>
+      <circle class="electron" cx="470" cy="235" r="6"/>
+
+      <text x="410" y="165" class="t-secondary t-small t-mono" text-anchor="middle" style="fill: rgba(248,231,28,0.85);">e⁻ flow</text>
+
+      <!-- NADH -> NAD+ near Complex I -->
+      <g transform="translate(210, 320)">
+        <rect class="tag tag-accent" x="-10" y="-18" width="78" height="28" rx="10"/>
+        <text x="29" y="2" text-anchor="middle" class="t-mono t-small" style="fill: rgba(80,227,194,0.9);">NADH</text>
+
+        <path class="arrow-line arrow-accent" d="M 70 -4 L 118 -4" marker-end="url(#arrowHeadAccent)"/>
+
+        <rect class="tag" x="122" y="-18" width="70" height="28" rx="10"/>
+        <text x="157" y="2" text-anchor="middle" class="t-mono t-small">NAD⁺</text>
+      </g>
+
+      <!-- TCA cycle bubble -->
+      <g transform="translate(310, 430)">
+        <circle cx="0" cy="0" r="52" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+        <text x="0" y="-6" text-anchor="middle" class="t-primary t-med">citric</text>
+        <text x="0" y="14" text-anchor="middle" class="t-primary t-med">acid cycle</text>
+
+        <!-- from acetyl-CoA -->
+        <path class="arrow-line" d="M 0 92 L 0 56" marker-end="url(#arrowHead)"/>
+
+        <!-- to NADH -->
+        <path class="arrow-line arrow-accent" d="M 60 -20 L 120 -70" marker-end="url(#arrowHeadAccent)"/>
+      </g>
+
+      <!-- Food-derived molecules inputs (pyruvate, fatty acids) -->
+      <g transform="translate(210, 575)">
+        <rect class="tag" x="0" y="0" width="120" height="34" rx="12"/>
+        <text x="60" y="23" text-anchor="middle" class="t-secondary t-med">pyruvate</text>
+
+        <rect class="tag" x="140" y="0" width="140" height="34" rx="12"/>
+        <text x="210" y="23" text-anchor="middle" class="t-secondary t-med">fatty acids</text>
+
+        <text x="140" y="58" text-anchor="middle" class="t-mono t-small" style="fill: rgba(232,93,117,0.9);">FOOD-DERIVED MOLECULES FROM CYTOSOL</text>
+
+        <path class="arrow-line" d="M 60 -6 L 170 -110" marker-end="url(#arrowHead)"/>
+        <path class="arrow-line" d="M 210 -6 L 250 -110" marker-end="url(#arrowHead)"/>
+      </g>
+
+      <!-- acetyl-CoA tag -->
+      <g transform="translate(310, 520)">
+        <rect class="tag tag-accent" x="-60" y="-18" width="120" height="32" rx="12"/>
+        <text x="0" y="4" text-anchor="middle" class="t-mono t-small" style="fill: rgba(80,227,194,0.9);">acetyl-CoA</text>
+      </g>
+
+      <!-- O2 in (to Complex IV) and H2O out -->
+      <g transform="translate(70, 305)">
+        <rect class="tag" x="-10" y="-18" width="60" height="30" rx="10"/>
+        <text x="20" y="3" text-anchor="middle" class="t-mono t-small">O₂</text>
+        <text x="-10" y="-28" class="t-mono t-small" style="fill: rgba(74,144,226,0.9);">IN</text>
+        <path class="arrow-line" d="M 50 -3 L 480 -3" marker-end="url(#arrowHead)"/>
+      </g>
+
+      <g transform="translate(90, 350)">
+        <rect class="tag" x="-10" y="-18" width="70" height="30" rx="10"/>
+        <text x="25" y="3" text-anchor="middle" class="t-mono t-small">H₂O</text>
+        <path class="arrow-line" d="M 60 -3 L 200 -3" marker-end="url(#arrowHead)"/>
+      </g>
+
+      <!-- CO2 out -->
+      <g transform="translate(520, 450)">
+        <rect class="tag" x="0" y="-18" width="70" height="30" rx="10"/>
+        <text x="35" y="3" text-anchor="middle" class="t-mono t-small">CO₂</text>
+        <text x="80" y="-28" class="t-mono t-small" style="fill: rgba(232,93,117,0.9);">OUT</text>
+        <path class="arrow-line" d="M 70 -3 L 260 -3" marker-end="url(#arrowHead)"/>
+      </g>
+
+      <!-- ADP + Pi in; ATP out (right side of mito, like the book) -->
+      <g transform="translate(720, 210)">
+        <text x="0" y="-38" class="t-mono t-small" style="fill: rgba(232,93,117,0.9);">OUT</text>
+        <rect class="tag tag-accent" x="0" y="-26" width="70" height="30" rx="10"/>
+        <text x="35" y="-5" text-anchor="middle" class="t-mono t-small" style="fill: rgba(80,227,194,0.9);">ATP</text>
+        <path class="arrow-line arrow-accent" d="M 70 -11 L 160 -11" marker-end="url(#arrowHeadAccent)"/>
+      </g>
+
+      <g transform="translate(720, 265)">
+        <text x="0" y="-38" class="t-mono t-small" style="fill: rgba(74,144,226,0.9);">IN</text>
+        <rect class="tag" x="0" y="-26" width="70" height="30" rx="10"/>
+        <text x="35" y="-5" text-anchor="middle" class="t-mono t-small">ADP</text>
+        <text x="78" y="-5" class="t-mono t-small" style="fill: rgba(255,255,255,0.55);">+</text>
+        <rect class="tag" x="92" y="-26" width="52" height="30" rx="10"/>
+        <text x="118" y="-5" text-anchor="middle" class="t-mono t-small">Pi</text>
+        <path class="arrow-line" d="M 150 -11 L 0 -11" marker-end="url(#arrowHead)"/>
+      </g>
+
+      <!-- Proton return through ATP synthase -->
+      <path class="arrow-line arrow-warm"
+            d="M 550 120 C 610 120, 640 150, 640 205
+               C 640 245, 640 265, 640 285"
+            marker-end="url(#arrowHeadWarm)"/>
+      <text x="650" y="150" class="t-mono t-small" style="fill: rgba(248,231,28,0.9);">H⁺ return</text>
+
+      <!-- Region labels -->
+      <text x="500" y="35" class="t-secondary t-small t-mono" text-anchor="middle">INTERMEMBRANE SPACE</text>
+      <text x="420" y="520" class="t-secondary t-small t-mono" text-anchor="middle">MATRIX</text>
+
+      <!-- Membrane labels -->
+      <text x="150" y="95" class="t-secondary t-small">outer mitochondrial membrane</text>
+      <text x="150" y="120" class="t-secondary t-small">inner mitochondrial membrane</text>
+    </g>
+  </svg>
+</div>
+  </div>
+</section>
         <p>Where R is the gas constant (8.314 J mol⁻¹ K⁻¹), T is temperature (310 K for human body), and F is the Faraday constant (96,485 C mol⁻¹).</p>
 
         <div class="reference">
@@ -1275,6 +2625,10 @@
         <div class="bottom-nav-icon">⚛️</div>
         <span>Interactive</span>
       </div>
+      <div class="bottom-nav-item" data-module="atp">
+  <div class="bottom-nav-icon">⚙️</div>
+  <span>ATP</span>
+</div>
       <div class="bottom-nav-item" data-module="learn">
         <div class="bottom-nav-icon">📚</div>
         <span>Learn</span>
@@ -1563,6 +2917,18 @@
       }
     `;
     document.head.appendChild(style);
+
+
+    
+document.addEventListener('DOMContentLoaded', () => {
+  const tpl = document.getElementById('atpTemplate');
+  const iframe = document.getElementById('atpIframe');
+
+  if (tpl && iframe) {
+    const atpHtml = tpl.innerHTML.trim();
+    iframe.srcdoc = atpHtml;
+  }
+});
   </script>
 </body>
 </html>
